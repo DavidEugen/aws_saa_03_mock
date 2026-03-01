@@ -43,7 +43,13 @@
             </div>
             <div class="options-display">
                 <strong>선택지:</strong>
-                <div class="options-text">{{ answer.options }}</div>
+                <div class="options-text">
+                    {% for opt in answer.options_list %}
+                    <div style="margin-bottom: 0.5rem;">
+                        <strong>{{ opt.option_label }}:</strong> {{ opt.option_text }}
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
             <div class="explanation-box">
                 <strong>해설:</strong>

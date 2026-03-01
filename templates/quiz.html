@@ -23,7 +23,7 @@
                     <!-- Multiple select -->
                     {% for answer in question.answers %}
                     <label class="option-label checkbox-option">
-                        <input type="checkbox" name="answer" value="{{ answer.option_label }}" class="answer-option">
+                        <input type="checkbox" name="answer" value="{{ answer.option_label }}" data-label="{{ answer.option_label }}" class="answer-option">
                         <span class="option-content">
                             <strong>{{ answer.option_label }}:</strong> {{ answer.option_text }}
                         </span>
@@ -33,7 +33,7 @@
                     <!-- Single select -->
                     {% for answer in question.answers %}
                     <label class="option-label radio-option">
-                        <input type="radio" name="answer" value="{{ answer.option_label }}" class="answer-option">
+                        <input type="radio" name="answer" value="{{ answer.option_label }}" data-label="{{ answer.option_label }}" class="answer-option">
                         <span class="option-content">
                             <strong>{{ answer.option_label }}:</strong> {{ answer.option_text }}
                         </span>
@@ -61,7 +61,8 @@
         session_id: '{{ session_id }}',
         q_index: {{ q_index }},
         total_questions: {{ total_questions }},
-        is_multi_select: {{ 1 if question.is_multi_select else 0 }}
+        is_multi_select: {{ 1 if question.is_multi_select else 0 }},
+        required_count: {{ question.correct_answer.count(',') + 1 if question.is_multi_select else 1 }}
     };
 </script>
 <script src="{{ url_for('static', filename='quiz.js') }}"></script>

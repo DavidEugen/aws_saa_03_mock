@@ -17,6 +17,11 @@ checkAnswerButton.addEventListener('click', async function(e) {
             alert('최소 1개 이상 선택해주세요.');
             return;
         }
+        // Check if selected count matches required count
+        if (checked.length !== questionData.required_count) {
+            alert(`정답은 ${questionData.required_count}개입니다. 현재 ${checked.length}개 선택했습니다.`);
+            return;
+        }
         selectedAnswer = Array.from(checked).map(c => c.value).join(',');
     } else {
         // Single select: get the checked value
@@ -84,6 +89,19 @@ function displayResult(result) {
     detailsHtml += `<div style="margin-left: 0; padding-left: 80px;">${result.explanation}</div>`;
 
     resultDetails.innerHTML = detailsHtml;
+
+    // Highlight correct/incorrect options
+    const correctAnswers = result.correct_answer.split(',').map(s => s.trim().toUpperCase());
+    document.querySelectorAll('.option-label').forEach(label => {
+        const input = label.querySelector('input');
+        const optionLabel = input.getAttribute('data-label').toUpperCase();
+
+        if (correctAnswers.includes(optionLabel)) {
+            label.classList.add('option-correct');
+        } else if (input.checked) {
+            label.classList.add('option-incorrect');
+        }
+    });
 
     // Show result section and hide answer form
     answerForm.style.display = 'none';
