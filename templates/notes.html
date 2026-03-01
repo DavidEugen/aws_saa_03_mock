@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}오답노트 - AWS Quiz{% endblock %}
+
+{% block content %}
+<div class="notes-container">
+    <h1>오답노트</h1>
+
+    {% if sessions %}
+    <div class="sessions-list">
+        <table class="sessions-table">
+            <thead>
+                <tr>
+                    <th>회차</th>
+                    <th>총 문제 수</th>
+                    <th>정답</th>
+                    <th>점수</th>
+                    <th>오답</th>
+                    <th>상세보기</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ session.round_number }}</td>
+                    <td>{{ session.total_count }}</td>
+                    <td>{{ session.correct_count }}</td>
+                    <td>{% if session.total_count > 0 %}{{ (session.correct_count / session.total_count * 100) | int }}%{% else %}0%{% endif %}</td>
+                    <td>{{ session.total_count - session.correct_count }}</td>
+                    <td>
+                        <a href="{{ url_for('notes.session_notes', session_id=session.session_id) }}" class="btn btn-small">보기</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>아직 완료된 퀴즈 세션이 없습니다.</p>
+        <a href="{{ url_for('quiz.setup') }}" class="btn btn-primary">문제 출제 시작</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

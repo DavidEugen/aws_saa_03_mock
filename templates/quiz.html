@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}문제 풀이 - AWS Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div class="quiz-header">
+        <div class="quiz-progress">
+            <span class="progress-text">{{ q_index + 1 }} / {{ total_questions }}</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (q_index + 1) / total_questions * 100 }}%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-content">
+        <h2 class="question-text">{{ question.question_text }}</h2>
+
+        <form id="answerForm">
+            <input type="hidden" name="question_id" value="{{ question.question_id }}">
+            <div class="options-list">
+                {% if question.is_multi_select %}
+                    <!-- Multiple select -->
+                    {% for answer in question.answers %}
+                    <label class="option-label checkbox-option">
+                        <input type="checkbox" name="answer" value="{{ answer.option_label }}" class="answer-option">
+                        <span class="option-content">
+                            <strong>{{ answer.option_label }}:</strong> {{ answer.option_text }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <!-- Single select -->
+                    {% for answer in question.answers %}
+                    <label class="option-label radio-option">
+                        <input type="radio" name="answer" value="{{ answer.option_label }}" class="answer-option">
+                        <span class="option-content">
+                            <strong>{{ answer.option_label }}:</strong> {{ answer.option_text }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="checkAnswerButton" class="btn btn-primary">정답 확인</button>
+            </div>
+        </form>
+
+        <!-- Result Section (hidden initially) -->
+        <div id="resultSection" class="result-section hidden">
+            <div id="resultStatus" class="result-status"></div>
+            <div id="resultDetails" class="result-details"></div>
+            <button type="button" id="nextButton" class="btn btn-primary">다음</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questionData = {
+        session_id: '{{ session_id }}',
+        q_index: {{ q_index }},
+        total_questions: {{ total_questions }},
+        is_multi_select: {{ 1 if question.is_multi_select else 0 }}
+    };
+</script>
+<script src="{{ url_for('static', filename='quiz.js') }}"></script>
+{% endblock %}

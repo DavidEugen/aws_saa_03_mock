@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}문제 설정 - AWS Quiz{% endblock %}
+
+{% block content %}
+<div class="setup-container">
+    <h1>문제 설정</h1>
+
+    <form id="setupForm" method="POST" action="{{ url_for('quiz.start') }}">
+        <!-- Categories Section -->
+        <fieldset>
+            <legend>카테고리</legend>
+            <div class="category-controls">
+                <button type="button" id="selectAllCategories" class="btn btn-secondary">전체 선택</button>
+                <button type="button" id="deselectAllCategories" class="btn btn-secondary">전체 해제</button>
+            </div>
+            <div class="categories-list">
+                {% for category in categories %}
+                <label class="checkbox-label">
+                    <input type="checkbox" name="categories" value="{{ category.category_id }}" class="category-checkbox">
+                    {{ category.name }}
+                </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <!-- Number of Questions Section -->
+        <fieldset>
+            <legend>문제 수</legend>
+            <input type="number" name="num_questions" value="10" min="1" max="100" class="form-input">
+        </fieldset>
+
+        <!-- Keywords Section -->
+        <fieldset>
+            <legend>키워드 검색 (선택사항)</legend>
+            <p class="help-text">같은 그룹 내 키워드는 AND 검색, 그룹 간은 OR 검색입니다.</p>
+
+            <div id="keywordGroups"></div>
+
+            <button type="button" id="addGroupButton" class="btn btn-secondary">그룹 추가</button>
+        </fieldset>
+
+        <!-- Hidden input for group count -->
+        <input type="hidden" id="groupCount" name="group_count" value="0">
+
+        <button type="submit" class="btn btn-primary">문제 출제</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='setup.js') }}"></script>
+{% endblock %}

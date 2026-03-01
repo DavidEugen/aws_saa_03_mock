@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}오답노트 - AWS Quiz{% endblock %}
+
+{% block content %}
+<div class="session-notes-container">
+    <div class="session-summary">
+        <h1>회차 {{ session.round_number }} - 오답노트</h1>
+        <div class="summary-stats">
+            <div class="stat">
+                <span class="stat-label">총 문제:</span>
+                <span class="stat-value">{{ session.total_count }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">정답:</span>
+                <span class="stat-value">{{ session.correct_count }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">오답:</span>
+                <span class="stat-value">{{ session.total_count - session.correct_count }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">점수:</span>
+                <span class="stat-value">{% if session.total_count > 0 %}{{ (session.correct_count / session.total_count * 100) | int }}{% else %}0{% endif %}%</span>
+            </div>
+        </div>
+    </div>
+
+    {% if wrong_answers %}
+    <div class="wrong-answers-list">
+        {% for answer in wrong_answers %}
+        <div class="wrong-answer-item">
+            <h3 class="wrong-question-text">{{ answer.question_text }}</h3>
+            <div class="answer-info">
+                <div class="info-group">
+                    <span class="label">내 답:</span>
+                    <span class="user-answer">{{ answer.selected_answer }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">정답:</span>
+                    <span class="correct-answer">{{ answer.correct_answer }}</span>
+                </div>
+            </div>
+            <div class="options-display">
+                <strong>선택지:</strong>
+                <div class="options-text">{{ answer.options }}</div>
+            </div>
+            <div class="explanation-box">
+                <strong>해설:</strong>
+                <p>{{ answer.explanation }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>이 세션에서 틀린 문제가 없습니다! 🎉</p>
+    </div>
+    {% endif %}
+
+    <div class="action-buttons">
+        <a href="{{ url_for('notes.all_sessions') }}" class="btn btn-secondary">목록으로</a>
+        <a href="{{ url_for('quiz.setup') }}" class="btn btn-primary">새 퀴즈 시작</a>
+    </div>
+</div>
+{% endblock %}
